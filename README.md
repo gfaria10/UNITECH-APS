@@ -1,3 +1,3 @@
 UNITech-APS
 
-Desenvolvimento do aplicativo UNITech
+Desenvolvimento do aplicativo UNITech.
