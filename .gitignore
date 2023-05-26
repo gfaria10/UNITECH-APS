@@ -1,1 +1,7 @@
 venv/
+*.pyc
+db.sqlite3
+/migrations/
+/.idea/
+backend/UNITech/UNITechApp/migrations/
+backend/UNITech/UNITech/__pycache__/
