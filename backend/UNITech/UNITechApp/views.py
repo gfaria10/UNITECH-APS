@@ -32,7 +32,8 @@ class MateriasViewSet(viewsets.ModelViewSet):
 
 
 class PesquisaViewSet(viewsets.ViewSet):
-    @method_decorator(cache_page(60 * 60 * 2))
+
+    # AJUSTES NO CACHE, QUANDO FOR O MESMO USUARIO PODE USAR O CACHE, MAS QUANDO FOR DIFERENTE NAO USAR O CACHE
     def list(self, request):
         try:
             user = request.user
