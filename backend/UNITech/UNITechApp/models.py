@@ -25,3 +25,13 @@ class Pesquisa(models.Model):
 
     def __str__(self):
         return f'Pesquisa de {self.usuario} em {self.materia}'
+
+
+class ConsultasRA(models.Model):
+    class Meta:
+        verbose_name = 'Consulta de Realidade Aumentada'
+        verbose_name_plural = 'Consultas de Realidade Aumentada'
+
+    # materia = models.ForeignKey(Materia, on_delete=models.CASCADE)
+    nome_objeto = models.CharField('Nome do Objeto 3D', max_length=100)
+    texto = models.TextField('Texto da Consulta do Objeto 3D', max_length=1000)

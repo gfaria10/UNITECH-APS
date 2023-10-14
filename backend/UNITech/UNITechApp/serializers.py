@@ -19,3 +19,9 @@ class PesquisaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pesquisa
         fields = '__all__'
+
+
+class ConsultasRASerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ConsultasRA
+        fields = '__all__'

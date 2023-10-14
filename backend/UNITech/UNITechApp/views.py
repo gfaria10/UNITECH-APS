@@ -1,22 +1,21 @@
-from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
 from rest_framework import permissions
+from rest_framework.views import APIView
+import wikipediaapi
+
 from .serializers import *
 from .models import *
 from django.db.models import Count
 
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-from django.views.decorators.vary import vary_on_cookie, vary_on_headers
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.exceptions import APIException
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
+
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -55,3 +54,49 @@ class PesquisaViewSet(viewsets.ViewSet):
             return Response(response_data, status=status.HTTP_200_OK)
         except Exception as e:
             raise APIException(str(e))
+
+
+# class WikipediaView(APIView):
+#     def get(self, request, topic):
+#         wiki_wiki = Wikipedia(language='pt-br')
+#         page = wiki_wiki.page(topic)
+#
+#         if page.exists():
+#             return Response({'content': page.text})
+#         else:
+#             return Response({'error': 'Página não encontrada'})
+
+
+class ConsultaRAViewSet(viewsets.ViewSet):
+
+    def list(self, request):
+        # Lista todos os itens
+        queryset = ConsultasRA.objects.all()
+        serializer = ConsultasRASerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+        # Retorna um item específico com base no ID
+        try:
+            obj_ra = ConsultasRA.objects.get(pk=pk)
+
+            wiki_wiki = wikipediaapi.Wikipedia('UniTechRA (admin@admin.com)', 'pt')
+            page_wiki = wiki_wiki.page(obj_ra.nome_objeto)
+            print("Título: ", page_wiki.title)
+            print("Resumo: ", page_wiki.summary)
+
+            # OBTÉM A CONSULTA FEITA NO WIKIPEDIA E SALVA NO OBJ LOCAL
+            obj_ra.texto = page_wiki.summary
+            obj_ra.save()
+
+            serializer = ConsultasRASerializer(obj_ra)
+
+            response_data = {
+                'consultasRA': serializer.data,
+            }
+
+            return Response(response_data, status=status.HTTP_200_OK)
+        except ConsultasRA.DoesNotExist:
+            return Response({'error': 'Item não encontrado'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
