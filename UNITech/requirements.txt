@@ -1,0 +1,4 @@
+django
+djangorestframework
+Wikipedia-API
+django-cors-headers
