@@ -1,1 +1,1 @@
-web: gunicorn UNITech.wsgi --log-file -
+web: gunicorn UNITech.UNITech.wsgi --log-file -
